@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GROVE STREAM — San Andreas in your browser</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e0d0a; --panel:#181610; --panel2:#211d14; --bone:#f3ead6;
+    --dim:#a3987c; --grove:#4e8f3c; --grove-hi:#6fc04f; --sa-orange:#e8a13c; --line:#312b1e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--bone);font-family:'Barlow Condensed',sans-serif;min-height:100vh}
+  ::selection{background:var(--grove);color:var(--ink)}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:18px;
+    padding:10px 22px;background:rgba(14,13,10,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  }
+  .logo{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--bone)}
+  .logo .main{font-family:'Anton',sans-serif;font-size:24px;color:var(--sa-orange);letter-spacing:1px}
+  .logo .main span{color:var(--grove-hi)}
+  .logo .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:3px;text-transform:uppercase}
+  header nav{margin-left:auto;display:flex;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12px}
+  header nav a{color:var(--dim);text-decoration:none;padding:6px 12px;letter-spacing:1px}
+  header nav a:hover{color:var(--bone)}
+  .status{display:flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;
+    font-size:11px;color:var(--dim);border:1px solid var(--line);padding:5px 10px;border-radius:3px}
+  .status .dot{width:7px;height:7px;border-radius:50%;background:var(--grove-hi);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  /* ---------- hero / console ---------- */
+  .hero{max-width:1120px;margin:0 auto;padding:44px 22px 20px;display:grid;gap:26px}
+  .hero h1{
+    font-family:'Anton',sans-serif;font-weight:400;font-style:italic;
+    font-size:clamp(36px,6.5vw,70px);line-height:.95;text-transform:uppercase;letter-spacing:1px;
+    text-shadow:4px 4px 0 rgba(0,0,0,.6);
+  }
+  .hero h1 .a{color:var(--sa-orange)}
+  .hero h1 .b{color:var(--grove-hi)}
+  .tagline{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--dim);letter-spacing:1.5px;max-width:62ch;line-height:1.7;margin-top:10px}
+  .tagline b{color:var(--grove-hi);font-weight:600}
+
+  .console-frame{
+    position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:14px;box-shadow:0 30px 80px rgba(0,0,0,.7), inset 0 0 0 1px #000;
+  }
+  .screen{position:relative;aspect-ratio:16/9;background:#050505;border-radius:6px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;min-height:320px}
+  .screen.has-scan::after{
+    content:'';position:absolute;inset:0;pointer-events:none;z-index:5;
+    background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.16) 2px 3px);mix-blend-mode:multiply;
+  }
+  #game{position:absolute;inset:0;width:100%;height:100%}
+  #game:focus{outline:none}
+
+  #dropzone{
+    position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:16px;text-align:center;cursor:pointer;
+    background:radial-gradient(ellipse at 50% 0%,rgba(232,161,60,.10),transparent 60%),#0a0908;
+    transition:background .2s;
+  }
+  #dropzone.over{background:radial-gradient(ellipse at 50% 40%,rgba(78,143,60,.20),transparent 65%),#0a0908}
+  #dropzone .dz-icon{font-family:'Anton',sans-serif;font-style:italic;font-size:52px;color:var(--sa-orange);
+    text-shadow:3px 3px 0 rgba(0,0,0,.6);transition:transform .2s}
+  #dropzone.over .dz-icon{transform:scale(1.12)}
+  #dropzone h2{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:15px;letter-spacing:1px;color:var(--dim)}
+  #dropzone h2 b{color:var(--bone);font-weight:600}
+  #dropzone .formats{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6350;letter-spacing:1px}
+  #dropzone .hint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#58513f;margin-top:6px}
+  #dropzone .hint b{color:var(--grove-hi)}
+
+  #booting{
+    position:absolute;inset:0;z-index:4;display:none;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;background:#050505;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:2px;
+  }
+  #booting .bar{width:240px;height:6px;background:#171410;border-radius:3px;overflow:hidden}
+  #booting .bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--grove),var(--grove-hi));transition:width .3s}
+  #errbox{
+    position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:6;display:none;
+    background:#20160b;border:1px solid var(--sa-orange);color:#f5e6c8;border-radius:5px;
+    padding:10px 16px;font-family:'IBM Plex Mono',monospace;font-size:12px;max-width:85%;text-align:center;
+  }
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)}
+  .btn{background:var(--panel2);border:1px solid var(--line);color:var(--bone);border-radius:4px;
+    padding:8px 14px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;
+    transition:border-color .15s}
+  .btn:hover{border-color:var(--grove);color:#fff}
+  .btn.primary{background:var(--grove);border-color:var(--grove-hi);color:#0e0d0a;font-weight:600}
+  .btn.primary:hover{background:var(--grove-hi)}
+  .toolbar .note{color:#6a6350}
+
+  .linkrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+  .linkrow input{flex:1;min-width:220px;background:#0e0c0a;border:1px solid var(--line);color:var(--bone);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;padding:9px 12px;border-radius:4px}
+  .linkrow input:focus{outline:none;border-color:var(--grove-hi)}
+
+  /* ---------- intel ---------- */
+  .intel{max-width:1120px;margin:0 auto;padding:30px 22px 70px}
+  .intel h3{font-size:14px;letter-spacing:4px;text-transform:uppercase;color:var(--dim);
+    border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:22px;font-weight:600}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+  .card .k{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--sa-orange);letter-spacing:2px;margin-bottom:8px}
+  .card h4{font-size:20px;font-weight:700;margin-bottom:6px;letter-spacing:.5px}
+  .card p{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);line-height:1.7}
+  .keys{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:2;color:var(--dim)}
+  .keys kbd{background:var(--panel2);border:1px solid #3a3428;border-bottom-width:2px;border-radius:3px;
+    padding:1px 7px;color:var(--bone);font-family:inherit;font-size:11px}
+  footer{border-top:1px solid var(--line);padding:22px;font-family:'IBM Plex Mono',monospace;
+    font-size:11px;color:#6a6350;text-align:center;letter-spacing:1px;line-height:1.8}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#top">
+    <span class="main">GROVE<span>STREAM</span></span>
+    <span class="sub">san andreas division</span>
+  </a>
+  <nav>
+    <a href="#play">CONSOLE</a>
+    <a href="#intel">INTEL</a>
+  </nav>
+  <div class="status"><span class="dot"></span> EMULATION LOCAL · NOTHING LEAVES YOUR MACHINE</div>
+</header>
+
+<div class="hero" id="top">
+  <div>
+    <h1><span class="a">SAN ANDREAS</span><br><span class="b">IN YOUR BROWSER.</span></h1>
+    <p class="tagline">No download beyond the game you already own. No launcher. No account. Drop the ISO in once —
+      <b>your browser keeps it</b> — and Los Santos boots in seconds every visit after.</p>
+  </div>
+
+  <div class="console-frame" id="play">
+    <div class="screen" id="screen">
+      <div id="dropzone">
+        <div class="dz-icon">SAN ANDREAS</div>
+        <h2><b>Drag the PS2 ISO here</b> or click to browse</h2>
+        <div class="formats">accepted: .iso or .zip of the US/EU PlayStation 2 disc (~4.6 GB — big, but cached after first load)</div>
+        <div class="hint">first time only — <b>stored offline in your browser</b>, not uploaded anywhere</div>
+      </div>
+      <input type="file" id="file" accept=".iso,.zip,.bin" hidden>
+      <div id="booting">
+        <div>LOADING LOS SANTOS…</div>
+        <div class="bar"><i id="bootbar"></i></div>
+        <div id="bootlabel">fetching PS2 core</div>
+      </div>
+      <div id="errbox"></div>
+      <div id="game"></div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn primary" id="btnFull">&#9974; FULLSCREEN</button>
+      <button class="btn" id="btnScan">SCANLINES: ON</button>
+      <button class="btn" id="btnReset">EJECT DISC</button>
+      <span class="note">gamepad supported — plug in &amp; press any button</span>
+    </div>
+
+    <div class="linkrow">
+      <input id="srcInput" type="text" placeholder="…or paste a direct URL to the San Andreas .iso / .zip" spellcheck="false">
+      <button class="btn" id="btnLoad">LOAD FROM URL</button>
+    </div>
+  </div>
+</div>
+
+<div class="intel" id="intel">
+  <h3>// Field Intel</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="k">01 · CONTROLS</div>
+      <h4>Keyboard defaults</h4>
+      <p>EmulatorJS maps a PS2 pad out of the box. The usual setup, remappable in the gear menu:</p>
+      <div class="keys">
+        <kbd>Arrows</kbd> left stick · <kbd>WASD</kbd> D-pad-ish<br>
+        <kbd>X / Z</kbd> cross / circle · <kbd>S / A</kbd> square / triangle<br>
+        <kbd>Q / W</kbd> L1 / R1 &nbsp; <kbd>Enter</kbd> start &nbsp; <kbd>Shift</kbd> select
+      </div>
+    </div>
+    <div class="card">
+      <div class="k">02 · YOUR SAVE LIVES</div>
+      <h4>Memory card = your browser</h4>
+      <p>Save at CJ's safehouse like it's 2004 — the file lands in browser storage and survives tab closes. Instant save-states too, for right before you attempt the flying school again.</p>
+    </div>
+    <div class="card">
+      <div class="k">03 · PERFORMANCE</div>
+      <h4>PS2 is heavy — be real</h4>
+      <p>WASM PS2 emulation needs a decent machine: a laptop from the last ~5 years on Chrome should hold playble speed. Phones will struggle — this one's for desktop. If it stutters, close other tabs first.</p>
+    </div>
+    <div class="card">
+      <div class="k">04 · THE LEGAL BIT</div>
+      <h4>Bring your own disc</h4>
+      <p>This page ships zero game data. If you own San Andreas, dumping your own disc into an ISO and dropping it here is yours to enjoy — which keeps this site on the right side of the law, forever.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const screen=$('screen'), dz=$('dropzone'), fileInput=$('file');
+let booted=false;
+
+/* ---------------- IndexedDB ISO cache ---------------- */
+function idb(){return new Promise((res,rej)=>{
+  const r=indexedDB.open('grovestream',1);
+  r.onupgradeneeded=()=>r.result.createObjectStore('discs');
+  r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);
+});}
+async function discPut(blob){const db=await idb();
+  return new Promise((res,rej)=>{const t=db.transaction('discs','readwrite');
+    t.objectStore('discs').put(blob,'sanandreas'); t.oncomplete=res; t.onerror=()=>rej(t.error);});}
+async function discGet(){const db=await idb();
+  return new Promise((res,rej)=>{const t=db.transaction('discs','readonly');
+    const q=t.objectStore('discs').get('sanandreas');
+    q.onsuccess=()=>res(q.result||null); q.onerror=()=>rej(q.error);});}
+async function discDel(){const db=await idb();
+  return new Promise(res=>{const t=db.transaction('discs','readwrite');
+    t.objectStore('discs').delete('sanandreas'); t.oncomplete=res;});}
+
+/* ---------------- boot ---------------- */
+function showBoot(on){ $('booting').style.display=on?'flex':'none'; if(on)setBar(8,'downloading PS2 core'); }
+function setBar(p,label){ $('bootbar').style.width=p+'%'; if(label)$('bootlabel').textContent=label; }
+function fail(msg){
+  showBoot(false); dz.style.display='flex'; booted=false;
+  const e=$('errbox'); e.textContent=msg; e.style.display='block';
+  setTimeout(()=>e.style.display='none',7000);
+}
+
+function startGame(blob){
+  if(booted)return;
+  booted=true; dz.style.display='none';
+  showBoot(true);
+  const url=URL.createObjectURL(blob);
+  window.EJS_player='#game';
+  window.EJS_core='play';                       /* Play! — the WASM PS2 core */
+  window.EJS_gameUrl=url;
+  window.EJS_gameName='GTA San Andreas';
+  window.EJS_startOnLoaded=true;
+  window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';
+  window.EJS_Buttons={
+    playPause:true, restart:false, mute:true, settings:true, fullscreen:false,
+    saveState:true, loadState:true, screenRecord:false, gamepad:true, cheat:true,
+    volume:true, saveSavFiles:true, loadSavFiles:false, quickSave:true, quickLoad:true,
+    contextMenu:false, exitEmulation:false
+  };
+  const s=document.createElement('script');
+  s.src='https://cdn.emulatorjs.org/stable/data/loader.js';
+  s.onload=()=>setBar(60,'core loaded — compiling wasm');
+  s.onerror=()=>fail('Could not reach the EmulatorJS CDN. Check your connection and retry.');
+  document.body.appendChild(s);
+  const iv=setInterval(()=>{
+    if(document.querySelector('#game canvas, #game .ejs_parent')){
+      clearInterval(iv); setBar(100,'welcome to los santos'); setTimeout(()=>showBoot(false),700);
+    }
+  },400);
+  setTimeout(()=>clearInterval(iv),90000);
+}
+
+/* ---------------- inputs ---------------- */
+dz.addEventListener('click',()=>fileInput.click());
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('over');}));
+dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0]; if(f)acceptFile(f);});
+fileInput.addEventListener('change',()=>{ if(fileInput.files[0])acceptFile(fileInput.files[0]); fileInput.value=''; });
+
+async function acceptFile(f){
+  if(!/\.(iso|zip|bin)$/i.test(f.name)){ fail('That file is not a PS2 disc image. I need the San Andreas .iso (or a .zip of it).'); return; }
+  setBar(20,'caching disc to browser storage');
+  try{ await discPut(f); }catch(_){/* private mode — run without cache */}
+  startGame(f);
+}
+
+/* URL loading (?src= or input box) */
+async function loadFromUrl(u){
+  u=(u||'').trim(); if(!u)return;
+  showBoot(true); dz.style.display='none';
+  try{
+    const r=await fetch(u); if(!r.ok)throw 0;
+    const b=await r.blob();
+    try{ await discPut(b); }catch(_){}
+    startGame(b);
+  }catch(_){ fail('Could not fetch that URL (CORS or dead link). Download the ISO and drag it in instead.'); }
+}
+$('btnLoad').addEventListener('click',()=>loadFromUrl($('srcInput').value));
+$('srcInput').addEventListener('keydown',e=>{if(e.key==='Enter')loadFromUrl(e.target.value);});
+
+/* toolbar */
+$('btnScan').addEventListener('click',function(){
+  const on=screen.classList.toggle('has-scan');
+  this.textContent='SCANLINES: '+(on?'ON':'OFF');
+});
+$('btnFull').addEventListener('click',()=>{
+  const t=document.querySelector('#game canvas, #game .ejs_parent, #game video');
+  if(t&&t.requestFullscreen)t.requestFullscreen(); else screen.requestFullscreen();
+});
+$('btnReset').addEventListener('click',async()=>{
+  if(booted)location.reload();
+  else{ await discDel(); dz.querySelector('h2 b').textContent='Disc cleared — drop the ISO again'; }
+});
+
+/* auto-resume from cache or ?src= */
+(async()=>{
+  const params=new URLSearchParams(location.search);
+  if(params.get('src')){ loadFromUrl(params.get('src')); return; }
+  try{
+    const b=await discGet();
+    if(b){ dz.querySelector('.formats').textContent='cached disc found — booting San Andreas…'; startGame(b); }
+  }catch(_){}
+})();
+</script>
+</body>
+</html>
