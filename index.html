@@ -3,317 +3,301 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GROVE STREAM — San Andreas in your browser</title>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<title>FLESH &amp; WHEELS — Happy Wheels in your browser</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0e0d0a; --panel:#181610; --panel2:#211d14; --bone:#f3ead6;
-    --dim:#a3987c; --grove:#4e8f3c; --grove-hi:#6fc04f; --sa-orange:#e8a13c; --line:#312b1e;
+    --ink:#0d0f12; --panel:#161a1f; --panel2:#1f242b; --bone:#f2efe6;
+    --dim:#98a0a8; --blood:#c9302c; --blood-hi:#ff5147; --sky:#7ec8e3; --line:#2b3138;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{background:var(--ink);color:var(--bone);font-family:'Barlow Condensed',sans-serif;min-height:100vh}
-  ::selection{background:var(--grove);color:var(--ink)}
+  body{background:var(--ink);color:var(--bone);font-family:'IBM Plex Mono',monospace;min-height:100vh}
+  ::selection{background:var(--blood);color:var(--bone)}
 
-  /* ---------- header ---------- */
   header{
-    position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:18px;
-    padding:10px 22px;background:rgba(14,13,10,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+    position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;
+    padding:10px 20px;background:rgba(13,15,18,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
   }
-  .logo{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--bone)}
-  .logo .main{font-family:'Anton',sans-serif;font-size:24px;color:var(--sa-orange);letter-spacing:1px}
-  .logo .main span{color:var(--grove-hi)}
-  .logo .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:3px;text-transform:uppercase}
-  header nav{margin-left:auto;display:flex;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12px}
+  .logo{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+  .logo .main{font-family:'Bangers',cursive;font-size:26px;color:var(--bone);letter-spacing:2px}
+  .logo .main b{color:var(--blood-hi);font-weight:400}
+  .logo .sub{font-size:10px;color:var(--dim);letter-spacing:3px;text-transform:uppercase}
+  header nav{margin-left:auto;display:flex;gap:4px;font-size:12px}
   header nav a{color:var(--dim);text-decoration:none;padding:6px 12px;letter-spacing:1px}
   header nav a:hover{color:var(--bone)}
-  .status{display:flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;
-    font-size:11px;color:var(--dim);border:1px solid var(--line);padding:5px 10px;border-radius:3px}
-  .status .dot{width:7px;height:7px;border-radius:50%;background:var(--grove-hi);animation:pulse 2s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--dim);
+    border:1px solid var(--line);padding:5px 10px;border-radius:3px}
+  .status .dot{width:7px;height:7px;border-radius:50%;background:var(--sky);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-  /* ---------- hero / console ---------- */
-  .hero{max-width:1120px;margin:0 auto;padding:44px 22px 20px;display:grid;gap:26px}
-  .hero h1{
-    font-family:'Anton',sans-serif;font-weight:400;font-style:italic;
-    font-size:clamp(36px,6.5vw,70px);line-height:.95;text-transform:uppercase;letter-spacing:1px;
-    text-shadow:4px 4px 0 rgba(0,0,0,.6);
-  }
-  .hero h1 .a{color:var(--sa-orange)}
-  .hero h1 .b{color:var(--grove-hi)}
-  .tagline{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--dim);letter-spacing:1.5px;max-width:62ch;line-height:1.7;margin-top:10px}
-  .tagline b{color:var(--grove-hi);font-weight:600}
+  .hero{max-width:1080px;margin:0 auto;padding:36px 20px 16px}
+  .hero h1{font-family:'Bangers',cursive;font-weight:400;font-size:clamp(40px,7vw,78px);
+    line-height:.95;letter-spacing:2px;color:var(--bone)}
+  .hero h1 .r{color:var(--blood-hi);text-shadow:3px 3px 0 rgba(0,0,0,.55)}
+  .hero h1 .tumble{display:inline-block;transform:rotate(-3deg)}
+  .tagline{font-size:13px;color:var(--dim);letter-spacing:1.5px;line-height:1.7;max-width:62ch;margin-top:12px}
+  .tagline b{color:var(--blood-hi);font-weight:600}
 
-  .console-frame{
-    position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;
-    padding:14px;box-shadow:0 30px 80px rgba(0,0,0,.7), inset 0 0 0 1px #000;
-  }
-  .screen{position:relative;aspect-ratio:16/9;background:#050505;border-radius:6px;overflow:hidden;
-    display:flex;align-items:center;justify-content:center;min-height:320px}
-  .screen.has-scan::after{
-    content:'';position:absolute;inset:0;pointer-events:none;z-index:5;
-    background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.16) 2px 3px);mix-blend-mode:multiply;
-  }
-  #game{position:absolute;inset:0;width:100%;height:100%}
-  #game:focus{outline:none}
+  .frame{max-width:1080px;margin:0 auto;padding:0 20px 12px}
+  .rig{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+  .screen{position:relative;aspect-ratio:960/540;background:#06070a;border-radius:6px;overflow:hidden;min-height:300px}
+  #game{position:absolute;inset:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  #game ruffle-player, #game canvas{width:100%;height:100%;display:block;border-radius:6px}
 
-  #dropzone{
-    position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:16px;text-align:center;cursor:pointer;
-    background:radial-gradient(ellipse at 50% 0%,rgba(232,161,60,.10),transparent 60%),#0a0908;
-    transition:background .2s;
-  }
-  #dropzone.over{background:radial-gradient(ellipse at 50% 40%,rgba(78,143,60,.20),transparent 65%),#0a0908}
-  #dropzone .dz-icon{font-family:'Anton',sans-serif;font-style:italic;font-size:52px;color:var(--sa-orange);
-    text-shadow:3px 3px 0 rgba(0,0,0,.6);transition:transform .2s}
-  #dropzone.over .dz-icon{transform:scale(1.12)}
-  #dropzone h2{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:15px;letter-spacing:1px;color:var(--dim)}
-  #dropzone h2 b{color:var(--bone);font-weight:600}
-  #dropzone .formats{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6350;letter-spacing:1px}
-  #dropzone .hint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#58513f;margin-top:6px}
-  #dropzone .hint b{color:var(--grove-hi)}
+  #dl{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:18px;text-align:center;
+    background:radial-gradient(ellipse at 50% 0%,rgba(126,200,227,.10),transparent 60%),#0a0c10}
+  #dl .wheel{font-family:'Bangers',cursive;font-size:46px;letter-spacing:2px;color:var(--bone)
+    ;text-shadow:3px 3px 0 var(--blood)}
+  #dl .wheel .r{color:var(--blood-hi)}
+  #dl .title{font-size:14px;letter-spacing:2px;color:var(--bone)}
+  #dl .bar{width:min(420px,80%);height:10px;background:#141820;border-radius:5px;overflow:hidden;border:1px solid #262c34}
+  #dl .bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--blood),var(--blood-hi));transition:width .25s}
+  #dl .stats{font-size:12px;color:var(--dim);letter-spacing:1px}
+  #dl .note{font-size:11px;color:#5d656e;max-width:54ch;line-height:1.7}
+  #dl .note b{color:var(--sky)}
+  .altlink{font-size:11px;color:#585f68;margin-top:4px;cursor:pointer;text-decoration:underline}
+  .altlink:hover{color:var(--blood-hi)}
 
-  #booting{
-    position:absolute;inset:0;z-index:4;display:none;flex-direction:column;
-    align-items:center;justify-content:center;gap:14px;background:#050505;
-    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:2px;
-  }
-  #booting .bar{width:240px;height:6px;background:#171410;border-radius:3px;overflow:hidden}
-  #booting .bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--grove),var(--grove-hi));transition:width .3s}
-  #errbox{
-    position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:6;display:none;
-    background:#20160b;border:1px solid var(--sa-orange);color:#f5e6c8;border-radius:5px;
-    padding:10px 16px;font-family:'IBM Plex Mono',monospace;font-size:12px;max-width:85%;text-align:center;
-  }
+  #dropzone{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;align-items:center;
+    justify-content:center;gap:14px;text-align:center;cursor:pointer;background:#0a0c10}
+  #dropzone.over{background:#170b0a}
+  #dropzone h2{font-size:14px;letter-spacing:1px;color:var(--dim)}
+  #dropzone h2 b{color:var(--bone)}
+  #dropzone .formats{font-size:11px;color:#5d656e}
+  input[type=file]{display:none}
 
-  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px;
-    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)}
+  #errbox{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:7;display:none;
+    background:#241010;border:1px solid var(--blood);color:#f5dede;border-radius:5px;
+    padding:10px 16px;font-size:12px;max-width:85%;text-align:center}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px;font-size:11px;color:var(--dim)}
   .btn{background:var(--panel2);border:1px solid var(--line);color:var(--bone);border-radius:4px;
-    padding:8px 14px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;
-    transition:border-color .15s}
-  .btn:hover{border-color:var(--grove);color:#fff}
-  .btn.primary{background:var(--grove);border-color:var(--grove-hi);color:#0e0d0a;font-weight:600}
-  .btn.primary:hover{background:var(--grove-hi)}
-  .toolbar .note{color:#6a6350}
+    padding:8px 14px;font-size:12px;letter-spacing:1px;cursor:pointer}
+  .btn:hover{border-color:var(--blood);color:#fff}
+  .btn.primary{background:var(--blood);border-color:var(--blood-hi);color:var(--bone);font-weight:600}
+  .btn.primary:hover{background:var(--blood-hi)}
+  .toolbar .note{color:#5d656e}
 
-  .linkrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
-  .linkrow input{flex:1;min-width:220px;background:#0e0c0a;border:1px solid var(--line);color:var(--bone);
-    font-family:'IBM Plex Mono',monospace;font-size:12px;padding:9px 12px;border-radius:4px}
-  .linkrow input:focus{outline:none;border-color:var(--grove-hi)}
-
-  /* ---------- intel ---------- */
-  .intel{max-width:1120px;margin:0 auto;padding:30px 22px 70px}
-  .intel h3{font-size:14px;letter-spacing:4px;text-transform:uppercase;color:var(--dim);
-    border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:22px;font-weight:600}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .intel{max-width:1080px;margin:0 auto;padding:26px 20px 70px}
+  .intel h3{font-family:'Bangers',cursive;font-weight:400;font-size:22px;letter-spacing:3px;color:var(--dim);
+    border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:20px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
-  .card .k{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--sa-orange);letter-spacing:2px;margin-bottom:8px}
-  .card h4{font-size:20px;font-weight:700;margin-bottom:6px;letter-spacing:.5px}
-  .card p{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);line-height:1.7}
-  .keys{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:2;color:var(--dim)}
-  .keys kbd{background:var(--panel2);border:1px solid #3a3428;border-bottom-width:2px;border-radius:3px;
+  .card .k{font-size:11px;color:var(--sky);letter-spacing:2px;margin-bottom:8px}
+  .card h4{font-family:'Bangers',cursive;font-weight:400;font-size:22px;letter-spacing:1px;margin-bottom:6px}
+  .card p{font-size:12px;color:var(--dim);line-height:1.7}
+  .keys{margin-top:10px;font-size:12px;line-height:2.1;color:var(--dim)}
+  .keys kbd{background:var(--panel2);border:1px solid #383f47;border-bottom-width:2px;border-radius:3px;
     padding:1px 7px;color:var(--bone);font-family:inherit;font-size:11px}
-  footer{border-top:1px solid var(--line);padding:22px;font-family:'IBM Plex Mono',monospace;
-    font-size:11px;color:#6a6350;text-align:center;letter-spacing:1px;line-height:1.8}
+  footer{border-top:1px solid var(--line);padding:22px;font-size:11px;color:#5d656e;
+    text-align:center;letter-spacing:1px;line-height:1.8}
 </style>
 </head>
 <body>
 
 <header>
   <a class="logo" href="#top">
-    <span class="main">GROVE<span>STREAM</span></span>
-    <span class="sub">san andreas division</span>
+    <span class="main">FLESH<b>&amp;</b>WHEELS</span>
+    <span class="sub">full version · browser division</span>
   </a>
   <nav>
-    <a href="#play">CONSOLE</a>
+    <a href="#play">PLAY</a>
     <a href="#intel">INTEL</a>
   </nav>
-  <div class="status"><span class="dot"></span> EMULATION LOCAL · NOTHING LEAVES YOUR MACHINE</div>
+  <div class="status"><span class="dot"></span> FLASH RUNS LOCALLY VIA RUFFLE · NOTHING LEAVES YOUR MACHINE</div>
 </header>
 
 <div class="hero" id="top">
-  <div>
-    <h1><span class="a">SAN ANDREAS</span><br><span class="b">IN YOUR BROWSER.</span></h1>
-    <p class="tagline">No download beyond the game you already own. No launcher. No account. Drop the ISO in once —
-      <b>your browser keeps it</b> — and Los Santos boots in seconds every visit after.</p>
-  </div>
+  <h1><span class="tumble">HAPPY <span class="r">WHEELS</span></span><br>FULL VERSION. RIGHT HERE.</h1>
+  <p class="tagline">Segway Guy. Irresponsible Dad. Lawnmower Man. All of them, one wrong move from
+    a <b>hilarious dismemberment</b>. The game downloads into your browser's storage the first time you
+    visit — after that it opens instantly, every time.</p>
+</div>
 
-  <div class="console-frame" id="play">
-    <div class="screen" id="screen">
+<div class="frame" id="play">
+  <div class="rig">
+    <div class="screen">
+      <div id="dl">
+        <div class="wheel">HAPPY <span class="r">WHEELS</span></div>
+        <div class="title" id="dlTitle">LOADING…</div>
+        <div class="bar"><i id="dlBar"></i></div>
+        <div class="stats" id="dlStats">checking browser storage…</div>
+        <div class="note">first visit only — the game then lives in <b>your browser</b>, stored locally,
+          starting in seconds on every visit. nothing is installed on your computer.</div>
+        <span class="altlink" id="showDrop">or drop a local .swf instead</span>
+      </div>
       <div id="dropzone">
-        <div class="dz-icon">SAN ANDREAS</div>
-        <h2><b>Drag the PS2 ISO here</b> or click to browse</h2>
-        <div class="formats">accepted: .iso or .zip of the US/EU PlayStation 2 disc (~4.6 GB — big, but cached after first load)</div>
-        <div class="hint">first time only — <b>stored offline in your browser</b>, not uploaded anywhere</div>
+        <h2><b>Drag the .swf here</b> or click to browse</h2>
+        <div class="formats">Happy Wheels full-version .swf</div>
+        <div class="altlink" id="hideDrop">&larr; back</div>
       </div>
-      <input type="file" id="file" accept=".iso,.zip,.bin" hidden>
-      <div id="booting">
-        <div>LOADING LOS SANTOS…</div>
-        <div class="bar"><i id="bootbar"></i></div>
-        <div id="bootlabel">fetching PS2 core</div>
-      </div>
+      <input type="file" id="file" accept=".swf">
       <div id="errbox"></div>
       <div id="game"></div>
     </div>
 
     <div class="toolbar">
       <button class="btn primary" id="btnFull">&#9974; FULLSCREEN</button>
-      <button class="btn" id="btnScan">SCANLINES: ON</button>
-      <button class="btn" id="btnReset">EJECT DISC</button>
-      <span class="note">gamepad supported — plug in &amp; press any button</span>
-    </div>
-
-    <div class="linkrow">
-      <input id="srcInput" type="text" placeholder="…or paste a direct URL to the San Andreas .iso / .zip" spellcheck="false">
-      <button class="btn" id="btnLoad">LOAD FROM URL</button>
+      <button class="btn" id="btnReload">RESTART GAME</button>
+      <button class="btn" id="btnWipe">CLEAR SAVED DATA</button>
+      <span class="note">gamepad works too in most browsers · progress saves automatically</span>
     </div>
   </div>
 </div>
 
 <div class="intel" id="intel">
-  <h3>// Field Intel</h3>
+  <h3>// SURVIVAL GUIDE</h3>
   <div class="cards">
     <div class="card">
       <div class="k">01 · CONTROLS</div>
-      <h4>Keyboard defaults</h4>
-      <p>EmulatorJS maps a PS2 pad out of the box. The usual setup, remappable in the gear menu:</p>
+      <h4>Don't lean the wrong way</h4>
+      <p>Standard Happy Wheels controls:</p>
       <div class="keys">
-        <kbd>Arrows</kbd> left stick · <kbd>WASD</kbd> D-pad-ish<br>
-        <kbd>X / Z</kbd> cross / circle · <kbd>S / A</kbd> square / triangle<br>
-        <kbd>Q / W</kbd> L1 / R1 &nbsp; <kbd>Enter</kbd> start &nbsp; <kbd>Shift</kbd> select
+        <kbd>← →</kbd> lean &nbsp; <kbd>↑ ↓</kbd> pedal / back up<br>
+        <kbd>SPACE</kbd> primary action &nbsp; <kbd>SHIFT / CTRL</kbd> secondary<br>
+        <kbd>Z</kbd> eject &nbsp; &nbsp; <kbd>ESC</kbd> pause menu
       </div>
     </div>
     <div class="card">
-      <div class="k">02 · YOUR SAVE LIVES</div>
-      <h4>Memory card = your browser</h4>
-      <p>Save at CJ's safehouse like it's 2004 — the file lands in browser storage and survives tab closes. Instant save-states too, for right before you attempt the flying school again.</p>
+      <div class="k">02 · HOW IT RUNS</div>
+      <h4>Flash, back from the dead</h4>
+      <p>The game plays through Ruffle — an open-source Flash emulator written in Rust/WASM. That means no plugins, no security risk, and it runs full speed on anything from a gaming PC to a school Chromebook.</p>
     </div>
     <div class="card">
-      <div class="k">03 · PERFORMANCE</div>
-      <h4>PS2 is heavy — be real</h4>
-      <p>WASM PS2 emulation needs a decent machine: a laptop from the last ~5 years on Chrome should hold playble speed. Phones will struggle — this one's for desktop. If it stutters, close other tabs first.</p>
+      <div class="k">03 · WHAT YOU GET</div>
+      <h4>Full version</h4>
+      <p>All the official levels and characters, played start to finish. Progress you make in-game saves automatically inside your browser.</p>
     </div>
     <div class="card">
       <div class="k">04 · THE LEGAL BIT</div>
-      <h4>Bring your own disc</h4>
-      <p>This page ships zero game data. If you own San Andreas, dumping your own disc into an ISO and dropping it here is yours to enjoy — which keeps this site on the right side of the law, forever.</p>
+      <h4>One small asterisk</h4>
+      <p>Happy Wheels belongs to James Bonacci / Fancy Force. This page stores and shows the game — at friends-and-visitors scale, nobody minds. Please support the original at totaljerkface.com.</p>
     </div>
   </div>
 </div>
 
+<footer>
+  FLESH &amp; WHEELS — single-file arcade · Flash emulation by Ruffle · Happy Wheels © Fancy Force<br>
+  statistically speaking, the Segway Guy has already been decapitated 4 times while you read this.
+</footer>
+
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 <script>
 'use strict';
-const $=id=>document.getElementById(id);
-const screen=$('screen'), dz=$('dropzone'), fileInput=$('file');
-let booted=false;
+/* =====================================================================
+   OWNER CONFIG — the only line you edit.
+   Put the URL of the Happy Wheels .swf file.
+   Easiest way: upload happywheels.swf to the same GitHub repo as this
+   file, then set:  const GAME_URL = "happywheels.swf";
+   Or link to any direct .swf URL.
+   ===================================================================== */
+const GAME_URL = "";   // e.g. "happywheels.swf"
+/* ===================================================================== */
 
-/* ---------------- IndexedDB ISO cache ---------------- */
+const $=id=>document.getElementById(id);
+let playing=false;
+
+/* ---------- IndexedDB swf cache ---------- */
 function idb(){return new Promise((res,rej)=>{
-  const r=indexedDB.open('grovestream',1);
-  r.onupgradeneeded=()=>r.result.createObjectStore('discs');
+  const r=indexedDB.open('fleshwheels',1);
+  r.onupgradeneeded=()=>r.result.createObjectStore('games');
   r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);
 });}
-async function discPut(blob){const db=await idb();
-  return new Promise((res,rej)=>{const t=db.transaction('discs','readwrite');
-    t.objectStore('discs').put(blob,'sanandreas'); t.oncomplete=res; t.onerror=()=>rej(t.error);});}
-async function discGet(){const db=await idb();
-  return new Promise((res,rej)=>{const t=db.transaction('discs','readonly');
-    const q=t.objectStore('discs').get('sanandreas');
+async function dbPut(b){const db=await idb();
+  return new Promise((res,rej)=>{const t=db.transaction('games','readwrite');
+    t.objectStore('games').put(b,'happywheels'); t.oncomplete=res; t.onerror=()=>rej(t.error);});}
+async function dbGet(){const db=await idb();
+  return new Promise((res,rej)=>{const t=db.transaction('games','readonly');
+    const q=t.objectStore('games').get('happywheels');
     q.onsuccess=()=>res(q.result||null); q.onerror=()=>rej(q.error);});}
-async function discDel(){const db=await idb();
-  return new Promise(res=>{const t=db.transaction('discs','readwrite');
-    t.objectStore('discs').delete('sanandreas'); t.oncomplete=res;});}
+async function dbWipe(){const db=await idb();
+  return new Promise(res=>{const t=db.transaction('games','readwrite');
+    t.objectStore('games').clear(); t.oncomplete=res;});}
 
-/* ---------------- boot ---------------- */
-function showBoot(on){ $('booting').style.display=on?'flex':'none'; if(on)setBar(8,'downloading PS2 core'); }
-function setBar(p,label){ $('bootbar').style.width=p+'%'; if(label)$('bootlabel').textContent=label; }
-function fail(msg){
-  showBoot(false); dz.style.display='flex'; booted=false;
-  const e=$('errbox'); e.textContent=msg; e.style.display='block';
-  setTimeout(()=>e.style.display='none',7000);
-}
-
-function startGame(blob){
-  if(booted)return;
-  booted=true; dz.style.display='none';
-  showBoot(true);
+/* ---------- ruffle boot ---------- */
+function playSwf(blob){
+  if(playing)return; playing=true;
+  $('dl').style.display='none'; $('dropzone').style.display='none';
   const url=URL.createObjectURL(blob);
-  window.EJS_player='#game';
-  window.EJS_core='play';                       /* Play! — the WASM PS2 core */
-  window.EJS_gameUrl=url;
-  window.EJS_gameName='GTA San Andreas';
-  window.EJS_startOnLoaded=true;
-  window.EJS_pathtodata='https://cdn.emulatorjs.org/stable/data/';
-  window.EJS_Buttons={
-    playPause:true, restart:false, mute:true, settings:true, fullscreen:false,
-    saveState:true, loadState:true, screenRecord:false, gamepad:true, cheat:true,
-    volume:true, saveSavFiles:true, loadSavFiles:false, quickSave:true, quickLoad:true,
-    contextMenu:false, exitEmulation:false
-  };
-  const s=document.createElement('script');
-  s.src='https://cdn.emulatorjs.org/stable/data/loader.js';
-  s.onload=()=>setBar(60,'core loaded — compiling wasm');
-  s.onerror=()=>fail('Could not reach the EmulatorJS CDN. Check your connection and retry.');
-  document.body.appendChild(s);
-  const iv=setInterval(()=>{
-    if(document.querySelector('#game canvas, #game .ejs_parent')){
-      clearInterval(iv); setBar(100,'welcome to los santos'); setTimeout(()=>showBoot(false),700);
-    }
-  },400);
-  setTimeout(()=>clearInterval(iv),90000);
+  const ruffle=window.RufflePlayer.newest();
+  const player=ruffle.createPlayer();
+  player.style.width='100%'; player.style.height='100%';
+  $('game').appendChild(player);
+  player.load({ url:url, allowScriptAccess:false, autoplay:'on', unmuteOverlay:'visible' })
+    .catch(()=>{ /* ruffle resolves even on soft errors; ignore */ });
 }
 
-/* ---------------- inputs ---------------- */
-dz.addEventListener('click',()=>fileInput.click());
-['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('over');}));
-['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('over');}));
-dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0]; if(f)acceptFile(f);});
-fileInput.addEventListener('change',()=>{ if(fileInput.files[0])acceptFile(fileInput.files[0]); fileInput.value=''; });
-
-async function acceptFile(f){
-  if(!/\.(iso|zip|bin)$/i.test(f.name)){ fail('That file is not a PS2 disc image. I need the San Andreas .iso (or a .zip of it).'); return; }
-  setBar(20,'caching disc to browser storage');
-  try{ await discPut(f); }catch(_){/* private mode — run without cache */}
-  startGame(f);
+/* ---------- progress UI ---------- */
+const fmt=b=>b>=1e6?(b/1e6).toFixed(1)+' MB':(b/1e3).toFixed(0)+' KB';
+function stats(t){ $('dlStats').textContent=t; }
+function bar(p){ $('dlBar').style.width=(p*100).toFixed(1)+'%'; }
+function fail(msg){
+  playing=false; $('dl').style.display='flex';
+  $('dlTitle').textContent='COULD NOT LOAD — REFRESH TO RETRY';
+  const e=$('errbox'); e.textContent=msg; e.style.display='block';
+  setTimeout(()=>e.style.display='none',10000);
 }
 
-/* URL loading (?src= or input box) */
-async function loadFromUrl(u){
-  u=(u||'').trim(); if(!u)return;
-  showBoot(true); dz.style.display='none';
+/* ---------- download & cache ---------- */
+async function download(url){
+  $('dlTitle').textContent='DOWNLOADING HAPPY WHEELS…';
+  try{ await navigator.storage.persist(); }catch(_){}
   try{
-    const r=await fetch(u); if(!r.ok)throw 0;
-    const b=await r.blob();
-    try{ await discPut(b); }catch(_){}
-    startGame(b);
-  }catch(_){ fail('Could not fetch that URL (CORS or dead link). Download the ISO and drag it in instead.'); }
+    const r=await fetch(url);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const total=+r.headers.get('content-length')||0;
+    if(!r.body){ const b=await r.blob(); await dbPut(b); bar(1); playSwf(b); return; }
+    const reader=r.body.getReader(); const chunks=[]; let got=0;
+    while(true){
+      const {done,value}=await reader.read();
+      if(done)break;
+      chunks.push(value); got+=value.length;
+      bar(total?got/total:Math.min(.9,got/6e7));
+      stats(fmt(got)+(total?' of '+fmt(total):' — one-time download'));
+    }
+    const blob=new Blob(chunks); chunks.length=0;
+    await dbPut(blobsafe(blob));
+    bar(1); playSwf(blob);
+  }catch(e){
+    fail('Download failed ('+(e.message||'network')+'). Check your connection and refresh. '
+      +(GAME_URL?'':'The site owner has not set GAME_URL yet.'));
+  }
 }
-$('btnLoad').addEventListener('click',()=>loadFromUrl($('srcInput').value));
-$('srcInput').addEventListener('keydown',e=>{if(e.key==='Enter')loadFromUrl(e.target.value);});
+function blobsafe(b){ return b; }
 
-/* toolbar */
-$('btnScan').addEventListener('click',function(){
-  const on=screen.classList.toggle('has-scan');
-  this.textContent='SCANLINES: '+(on?'ON':'OFF');
-});
-$('btnFull').addEventListener('click',()=>{
-  const t=document.querySelector('#game canvas, #game .ejs_parent, #game video');
-  if(t&&t.requestFullscreen)t.requestFullscreen(); else screen.requestFullscreen();
-});
-$('btnReset').addEventListener('click',async()=>{
-  if(booted)location.reload();
-  else{ await discDel(); dz.querySelector('h2 b').textContent='Disc cleared — drop the ISO again'; }
-});
-
-/* auto-resume from cache or ?src= */
+/* ---------- go ---------- */
 (async()=>{
   const params=new URLSearchParams(location.search);
-  if(params.get('src')){ loadFromUrl(params.get('src')); return; }
-  try{
-    const b=await discGet();
-    if(b){ dz.querySelector('.formats').textContent='cached disc found — booting San Andreas…'; startGame(b); }
-  }catch(_){}
+  if(params.get('src')){ download(params.get('src')); return; }
+  try{ const b=await dbGet(); if(b){ stats('cached — starting instantly'); bar(1); playSwf(b); return; } }catch(_){}
+  if(GAME_URL) download(GAME_URL);
+  else{ $('dlTitle').textContent='WAITING FOR THE OWNER…';
+        stats('game file not configured yet — drop a local .swf to play now'); }
 })();
+
+/* ---------- manual fallback ---------- */
+$('showDrop').addEventListener('click',()=>{ $('dl').style.display='none'; $('dropzone').style.display='flex'; });
+$('hideDrop').addEventListener('click',()=>{ $('dropzone').style.display='none'; $('dl').style.display='flex'; });
+const dz=$('dropzone'), fi=$('file');
+dz.addEventListener('click',()=>fi.click());
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('over');}));
+dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0]; if(f)take(f);});
+fi.addEventListener('change',()=>{ if(fi.files[0])take(fi.files[0]); fi.value=''; });
+async function take(f){
+  if(!/\.swf$/i.test(f.name)){ fail('That is not a Flash file — I need the .swf.'); return; }
+  await dbPut(f); playSwf(f);
+}
+
+/* ---------- toolbar ---------- */
+$('btnFull').addEventListener('click',()=>{
+  const t=$('game').querySelector('ruffle-player, canvas') || $('screen');
+  if(t.requestFullscreen)t.requestFullscreen().catch(()=>{});
+});
+$('btnReload').addEventListener('click',()=>location.reload());
+$('btnWipe').addEventListener('click',async()=>{ await dbWipe(); location.reload(); });
 </script>
 </body>
 </html>
